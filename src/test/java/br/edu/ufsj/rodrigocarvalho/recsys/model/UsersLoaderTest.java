@@ -1,9 +1,7 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,12 +23,19 @@ public class UsersLoaderTest {
 		List<Users> users;
 		users = usersLoader.load();
 		assertNotEquals(0, users.size());
-
 	}
 
 	@Test(expected = FileNotFoundException.class)
 	public void verifyInvalidFileNameToImport() throws FileNotFoundException, IOException, ParseException {
 		UsersLoader usersLoader = new UsersLoader("nomeInvalidoDeArquivo.json");
+		List<Users> users = usersLoader.load();
+	}
+	
+	@Test(expected = ParseException.class)
+	public void testaConteudoDeArquivoInvalidoParaImportarJson() throws FileNotFoundException, IOException, ParseException {
+		UsersLoader usersLoader = new UsersLoader(
+				"/home/rodrigo/sistemas_java/recsys/datasets/yelp_dataset/user.jsonInvalido.test");
+
 		List<Users> users = usersLoader.load();
 	}
 }

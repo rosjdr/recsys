@@ -41,14 +41,17 @@ public class UsersLoader {
 	private Users createUserFromJson(String linha) throws ParseException {
 		JSONParser jsonParser = new JSONParser();
 		Object objUser = jsonParser.parse(linha);
-						
 		JSONObject jsonObject = (JSONObject) objUser;
-						
+		return parseJSonObject(jsonObject);
+	}
+
+	private Users parseJSonObject(JSONObject jsonObject) {
 		String id = (String) jsonObject.get("user_id");				
 		String name = (String) jsonObject.get("name");				
-		Long fans = (Long) jsonObject.get("fans");
+		Long fans = (Long) jsonObject.get("fans");	
+		Double averageStars = (Double) jsonObject.get("average_stars");			
 		
-		return new Users(id, name, fans);
+		return new Users(id, name, fans, averageStars);
 	}
 
 }

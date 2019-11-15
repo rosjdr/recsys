@@ -1,16 +1,33 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Users {
 	
 	private final String userId;
-	private final String name;
-	
+	private final String name;	
 	private final Long fans;
+	private final Double averageStars;
+	
+	private List<Users> friends;
 
-	public Users(String userId, String name, Long fans) {
+	public Users(String userId, String name, Long fans, Double averageStars) {
 		this.userId = userId;
 		this.name = name;
 		this.fans = fans;
+		this.averageStars = averageStars;
+		
+		this.friends = new ArrayList<Users>();
+	}
+	
+	public void addFriend(Users user) {
+		this.friends.add(user);
+	}
+	
+	public List<Users> getFriends(){
+		return Collections.unmodifiableList(friends);
 	}
 	
 	public String getUserId() {
@@ -23,6 +40,10 @@ public class Users {
 	
 	public Long getFans() {
 		return fans;
+	}
+	
+	public Double getAverageStars() {
+		return averageStars;
 	}
 
 	@Override
@@ -50,5 +71,9 @@ public class Users {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		return "[" + this.userId + ", " + this.name + ", " + this. fans + ", " + this.averageStars + "]" ; 
+	}
 	
 }
