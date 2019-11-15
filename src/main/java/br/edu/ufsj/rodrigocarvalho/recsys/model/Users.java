@@ -4,13 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Users {
 	
+	@Id	
 	private final String userId;
 	private final String name;	
 	private final Long fans;
 	private final Double averageStars;
 	
+	@OneToMany
 	private List<Users> friends;
 
 	public Users(String userId, String name, Long fans, Double averageStars) {

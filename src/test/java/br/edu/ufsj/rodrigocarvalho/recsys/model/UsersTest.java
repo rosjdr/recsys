@@ -14,8 +14,5 @@ public class UsersTest {
 		Users u2 = new Users("Ha3iJu77CxlrFm-vQRs_8g", "u2", 10L, 0.0);
 		
 		assertEquals(u1, u2);
-		
-		Logger log = Logger.getLogger(UsersTest.class.getName());
-		log.info("TEste");
 	}
 }

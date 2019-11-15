@@ -1,4 +1,4 @@
-package br.edu.ufsj.rodrigocarvalho.recsys.loaders;
+package br.edu.ufsj.rodrigocarvalho.recsys.loader;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

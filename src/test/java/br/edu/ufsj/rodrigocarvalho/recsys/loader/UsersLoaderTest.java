@@ -1,6 +1,5 @@
-package br.edu.ufsj.rodrigocarvalho.recsys.model;
+package br.edu.ufsj.rodrigocarvalho.recsys.loader;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import java.io.FileNotFoundException;
@@ -10,7 +9,7 @@ import java.util.List;
 import org.json.simple.parser.ParseException;
 import org.junit.Test;
 
-import br.edu.ufsj.rodrigocarvalho.recsys.loaders.UsersLoader;
+import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
 public class UsersLoaderTest {
 
