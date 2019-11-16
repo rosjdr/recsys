@@ -1,56 +1,107 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
+@Table(schema = "recsys")
 public class Users {
-	
-	@Id	
-	private final String userId;
-	private final String name;	
-	private final Long fans;
-	private final Double averageStars;
-	
-	@OneToMany
-	private List<Users> friends;
 
+	@Id
+	private String userId;
+	private String name;
+	private Long fans;
+	private Double averageStars;
+
+	@Transient
+	private String friendsStr;
+	
+	@JoinTable(name = "friends", schema = "recsys", joinColumns = {
+			@JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "friendId", referencedColumnName = "userId", nullable = false) })
+	@ManyToMany	
+	private Collection<Users> friends;
+
+	public Users() {
+	}
+	
 	public Users(String userId, String name, Long fans, Double averageStars) {
 		this.userId = userId;
 		this.name = name;
 		this.fans = fans;
 		this.averageStars = averageStars;
-		
+
 		this.friends = new ArrayList<Users>();
 	}
-	
+
+	public Users(String userId) {
+		this.userId = userId;
+		this.name = null;
+		this.fans = 0L;
+		this.averageStars = 0.0;
+
+		this.friends = new ArrayList<Users>();
+	}
+
+	public String getFriendsStr() {
+		return friendsStr;
+	}
+
+	public void setFriendsStr(String friendsStr) {
+		this.friendsStr = friendsStr;
+	}
+
 	public void addFriend(Users user) {
 		this.friends.add(user);
 	}
-	
-	public List<Users> getFriends(){
-		return Collections.unmodifiableList(friends);
+
+	public Collection<Users> getFriends() {
+		return Collections.unmodifiableCollection(friends);
 	}
-	
+
 	public String getUserId() {
 		return userId;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public Long getFans() {
 		return fans;
 	}
-	
+
 	public Double getAverageStars() {
 		return averageStars;
+	}		
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setFans(Long fans) {
+		this.fans = fans;
+	}
+
+	public void setAverageStars(Double averageStars) {
+		this.averageStars = averageStars;
+	}
+
+	public void setFriends(Collection<Users> friends) {
+		this.friends = friends;
 	}
 
 	@Override
@@ -77,10 +128,10 @@ public class Users {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "[" + this.userId + ", " + this.name + ", " + this. fans + ", " + this.averageStars + "]" ; 
+		return "[" + this.userId + ", " + this.name + ", " + this.fans + ", " + this.averageStars + "]";
 	}
-	
+
 }

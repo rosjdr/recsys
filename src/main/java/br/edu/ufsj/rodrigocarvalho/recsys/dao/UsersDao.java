@@ -1,6 +1,9 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import br.edu.ufsj.rodrigocarvalho.recsys.helper.JpaHelper;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
@@ -18,8 +21,8 @@ public class UsersDao {
 		entityManager.persist(user);		
 	}
 
-	public Users find(Users user) {
-		return entityManager.find(Users.class, user.getUserId());
+	public Users find(String userId) {
+		return entityManager.find(Users.class, userId);
 	}
 
 	public void startTransaction() {
@@ -32,6 +35,25 @@ public class UsersDao {
 
 	public void rollback() {
 		entityManager.getTransaction().rollback();
+	}
+
+	public void close() {
+		entityManager.close();
+		
+	}
+
+	public List<Users> getFriendsByUser(Users userFind) {		
+		return null;
+	}
+	
+	public void remove(Users user) {
+		entityManager.remove(user);
+	}
+	
+	public List<Users> findAll(){
+		TypedQuery<Users> query = entityManager.createQuery("from Users", Users.class);
+		return query.getResultList();
+		
 	}
 
 }

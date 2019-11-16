@@ -6,7 +6,7 @@ import javax.persistence.Persistence;
 
 public class JpaHelper {
 
-	private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("recsys_yelp");
+	private EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("recsys_yelp");
 
 	public EntityManager getEntityManager() {
 		return entityManagerFactory.createEntityManager();

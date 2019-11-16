@@ -51,7 +51,10 @@ public class UsersLoader {
 		Long fans = (Long) jsonObject.get("fans");	
 		Double averageStars = (Double) jsonObject.get("average_stars");			
 		
-		return new Users(id, name, fans, averageStars);
+		Users user = new Users(id, name, fans, averageStars);
+		user.setFriendsStr((String) jsonObject.get("friends"));
+		
+		return user; 
 	}
 
 }
