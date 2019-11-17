@@ -1,17 +1,22 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
 
+import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.edu.ufsj.rodrigocarvalho.recsys.loader.UsersLoader;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
 public class UsersDaoTest {
@@ -84,6 +89,24 @@ public class UsersDaoTest {
 		assertTrue(friendsSaved.contains(friend1));
 		assertTrue(friendsSaved.contains(friend2));
 	}
+	
+	
+	@Test
+	public void testImportUsersFromJsonToDataBase() throws FileNotFoundException, IOException, ParseException {
+		UsersLoader usersLoader = new UsersLoader(
+				"/home/rodrigo/sistemas_java/recsys/datasets/yelp_dataset/user.json.test");
+
+		List<Users> users;
+		users = usersLoader.load();
+		
+		users.forEach(u -> userDao.save(u));
+		users.forEach(u -> userDao.setFriendsByString(u));
+		users.forEach(u -> userDao.save(u));
+		
+		assertEquals(10, users.size());		
+	}
+	
+	
 
 	private Users getAryaUser() {
 		return new Users("789", "Arya", 10L, 3.5);
