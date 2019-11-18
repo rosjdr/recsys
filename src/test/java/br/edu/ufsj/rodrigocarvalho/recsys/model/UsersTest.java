@@ -2,7 +2,6 @@ package br.edu.ufsj.rodrigocarvalho.recsys.model;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class UsersTest {

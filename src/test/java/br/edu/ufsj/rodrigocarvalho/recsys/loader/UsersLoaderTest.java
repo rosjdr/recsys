@@ -17,7 +17,7 @@ public class UsersLoaderTest {
 	public void verifyUsersImportFromFile() throws FileNotFoundException, IOException, ParseException {
 
 		UsersLoader usersLoader = new UsersLoader(
-				"/home/rodrigo/sistemas_java/recsys/datasets/yelp_dataset/user.json.test");
+				"datasets/yelp_dataset/user.json.test");
 
 		List<Users> users;
 		users = usersLoader.load();
@@ -27,14 +27,14 @@ public class UsersLoaderTest {
 	@Test(expected = FileNotFoundException.class)
 	public void verifyInvalidFileNameToImport() throws FileNotFoundException, IOException, ParseException {
 		UsersLoader usersLoader = new UsersLoader("nomeInvalidoDeArquivo.json");
-		List<Users> users = usersLoader.load();
+		usersLoader.load();
 	}
 	
 	@Test(expected = ParseException.class)
 	public void testaConteudoDeArquivoInvalidoParaImportarJson() throws FileNotFoundException, IOException, ParseException {
 		UsersLoader usersLoader = new UsersLoader(
-				"/home/rodrigo/sistemas_java/recsys/datasets/yelp_dataset/user.jsonInvalido.test");
+				"datasets/yelp_dataset/user.jsonInvalido.test");
 
-		List<Users> users = usersLoader.load();
+		usersLoader.load();
 	}
 }
