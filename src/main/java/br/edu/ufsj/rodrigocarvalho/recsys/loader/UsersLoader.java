@@ -6,19 +6,38 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import br.edu.ufsj.rodrigo.server.TareafaConsumidor;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
 public class UsersLoader {
 	
+	private static final int QUANTIDADE_CONSUMIDORES = 8;
 	private String fileName;
+	private ExecutorService threadPool;
+	private BlockingQueue<Users> importQueue;
 
 	public UsersLoader(String fileName) {
 		this.fileName = fileName;
+		this.threadPool = Executors.newCachedThreadPool();
+		this.importQueue = new ArrayBlockingQueue<Users>(QUANTIDADE_CONSUMIDORES);
+		
+		startQueueConsumers();
+	}
+
+	private void startQueueConsumers() {
+		for (int i = 0; i < QUANTIDADE_CONSUMIDORES; i++) {
+			TareafaConsumidor tarefa = new TareafaConsumidor(filaComandos);
+			this.threadPool.execute(tarefa);			
+		}
 	}
 
 	public List<Users> load() throws FileNotFoundException, IOException, ParseException {
@@ -55,6 +74,14 @@ public class UsersLoader {
 		user.setFriendsStr((String) jsonObject.get("friends"));
 		
 		return user; 
+	}
+
+	public int importData() throws FileNotFoundException, IOException, ParseException {
+		List<Users> users = load();
+		
+		
+		
+		return 0;
 	}
 
 }

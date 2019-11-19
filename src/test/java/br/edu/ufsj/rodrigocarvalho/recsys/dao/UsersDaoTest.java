@@ -93,7 +93,7 @@ public class UsersDaoTest {
 	@Test
 	public void testImportUsersFromJsonToDataBase() throws FileNotFoundException, IOException, ParseException {
 		UsersLoader usersLoader = new UsersLoader(
-				"./datasets/yelp_dataset/user.json.test");
+				"test_datasets/user.json.test");
 
 		List<Users> users;
 		users = usersLoader.load();

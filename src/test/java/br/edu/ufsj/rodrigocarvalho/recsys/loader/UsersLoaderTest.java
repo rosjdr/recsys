@@ -1,5 +1,6 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.loader;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import java.io.FileNotFoundException;
@@ -17,7 +18,7 @@ public class UsersLoaderTest {
 	public void verifyUsersImportFromFile() throws FileNotFoundException, IOException, ParseException {
 
 		UsersLoader usersLoader = new UsersLoader(
-				"datasets/yelp_dataset/user.json.test");
+				"test_datasets/user.json.test");
 
 		List<Users> users;
 		users = usersLoader.load();
@@ -33,8 +34,16 @@ public class UsersLoaderTest {
 	@Test(expected = ParseException.class)
 	public void testaConteudoDeArquivoInvalidoParaImportarJson() throws FileNotFoundException, IOException, ParseException {
 		UsersLoader usersLoader = new UsersLoader(
-				"datasets/yelp_dataset/user.jsonInvalido.test");
+				"test_datasets/user.jsonInvalido.test");
 
 		usersLoader.load();
+	}
+	
+	@Test
+	public void testUsersImportPoolToBD() {
+		UsersLoader usersLoader = new UsersLoader("test_datasets/user.json.test");
+		int countUsersImported = usersLoader.importData();
+		assertEquals(10, countUsersImported);
+		
 	}
 }
