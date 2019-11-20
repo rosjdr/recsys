@@ -18,7 +18,7 @@ public class UsersLoaderTest {
 	public void verifyUsersImportFromFile() throws FileNotFoundException, IOException, ParseException {
 
 		UsersLoader usersLoader = new UsersLoader(
-				"test_datasets/user.json.test");
+				"test_datasets/user.json");
 
 		List<Users> users;
 		users = usersLoader.load();
@@ -40,10 +40,9 @@ public class UsersLoaderTest {
 	}
 	
 	@Test
-	public void testUsersImportPoolToBD() {
-		UsersLoader usersLoader = new UsersLoader("test_datasets/user.json.test");
+	public void testUsersImportPoolToBD() throws FileNotFoundException, IOException, ParseException {
+		UsersLoader usersLoader = new UsersLoader("test_datasets/user.json");
 		int countUsersImported = usersLoader.importData();
 		assertEquals(10, countUsersImported);
-		
 	}
 }

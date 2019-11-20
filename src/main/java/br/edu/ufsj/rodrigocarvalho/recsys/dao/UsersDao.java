@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import br.edu.ufsj.rodrigocarvalho.recsys.helper.JpaHelper;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
-public class UsersDao {
+public class UsersDao implements AutoCloseable{
 
 	private EntityManager entityManager;
 

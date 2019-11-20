@@ -11,11 +11,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import br.edu.ufsj.rodrigo.server.TareafaConsumidor;
+import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersDao;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
 public class UsersLoader {
@@ -34,10 +35,7 @@ public class UsersLoader {
 	}
 
 	private void startQueueConsumers() {
-		for (int i = 0; i < QUANTIDADE_CONSUMIDORES; i++) {
-			TareafaConsumidor tarefa = new TareafaConsumidor(filaComandos);
-			this.threadPool.execute(tarefa);			
-		}
+		
 	}
 
 	public List<Users> load() throws FileNotFoundException, IOException, ParseException {
@@ -77,11 +75,47 @@ public class UsersLoader {
 	}
 
 	public int importData() throws FileNotFoundException, IOException, ParseException {
+		int contImportedUsers = 0;
+		
 		List<Users> users = load();
 		
-		
-		
-		return 0;
+		try (UsersDao userDao = new UsersDao()){
+			contImportedUsers = importusers(users, userDao); 
+			importFriends(users, userDao); 
+		}
+				
+		return contImportedUsers;
+	}
+
+	private void importFriends(List<Users> users, UsersDao userDao) {
+		for (Users u : users) {				
+			try {
+				userDao.startTransaction();
+				userDao.setFriendsByString(u);
+				userDao.commit();
+			} catch (Exception e) {
+				userDao.rollback();
+				Logger log = Logger.getLogger(this.getClass());
+				log.error("Fail to import friends to user " + u.getUserId() + ": " + e.getMessage());
+			}
+		}
+	}
+
+	private int importusers(List<Users> users, UsersDao userDao) {
+		int contImportedUsers = 0;
+		for (Users u : users) {
+			try {
+				userDao.startTransaction();
+				userDao.save(u);
+				userDao.commit();
+				contImportedUsers++;
+			} catch (Exception e) {
+				userDao.rollback();
+				Logger log = Logger.getLogger(this.getClass());
+				log.error("Fail to import user " + u.getUserId() + ": " + e.getMessage());
+			}
+		}
+		return contImportedUsers;
 	}
 
 }
