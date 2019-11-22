@@ -64,4 +64,12 @@ public class UsersDao implements AutoCloseable{
 		friendsIds.forEach(uId -> user.addFriend(this.find(uId.trim())));
 	}
 
+	public void flush() {
+		entityManager.flush();
+	}
+
+	public void clear() {
+		entityManager.clear();
+	}
+
 }
