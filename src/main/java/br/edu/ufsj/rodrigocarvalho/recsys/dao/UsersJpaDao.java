@@ -10,11 +10,11 @@ import javax.persistence.TypedQuery;
 import br.edu.ufsj.rodrigocarvalho.recsys.helper.JpaHelper;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
-public class UsersDao implements AutoCloseable{
+public class UsersJpaDao implements AutoCloseable{
 
 	private EntityManager entityManager;
 
-	public UsersDao() {
+	public UsersJpaDao() {
 		JpaHelper jpaHelper = new JpaHelper();
 		this.entityManager = jpaHelper.getEntityManager();		
 	}

@@ -9,7 +9,7 @@ import org.junit.Test;
 public class JpaHelperTest {
 
 	@Test
-	public void testDataBaseConnection() {
+	public void testJpaDataBaseConnection() {
 		JpaHelper jpaHelper = new JpaHelper();
 		EntityManager entityManager = jpaHelper.getEntityManager();
 		
@@ -17,4 +17,6 @@ public class JpaHelperTest {
 		
 		entityManager.close();
 	}
+	
+
 }

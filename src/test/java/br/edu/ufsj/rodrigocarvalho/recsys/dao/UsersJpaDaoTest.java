@@ -18,17 +18,17 @@ import org.junit.Test;
 import br.edu.ufsj.rodrigocarvalho.recsys.loader.UsersLoader;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
-public class UsersDaoTest {
+public class UsersJpaDaoTest {
 	
 	private static final double JOAO_FRANCISCO_STARS = 4.5;
 	private static final long JOAO_FRANCISCO_FANS = 100L;
 	private static final String JOÃO_FRANCISCO_NAME = "João Francisco";
 	private static final String JOAO_FRANCISCO_ID = "123";
-	private UsersDao userDao;
+	private UsersJpaDao userDao;
 
 	@Before
 	public void preparaDaoParaTestes() {
-		userDao = new UsersDao();
+		userDao = new UsersJpaDao();
 		userDao.startTransaction();
 			
 		Users user = userDao.find(JOAO_FRANCISCO_ID);

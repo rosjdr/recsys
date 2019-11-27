@@ -6,10 +6,10 @@ import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
 public class SaveUserRunnable implements Runnable {
 	
-	private UsersDao userDao;
+	private UsersJpaDao userDao;
 	private Users u;
 
-	public SaveUserRunnable(UsersDao userDao, Users u) {
+	public SaveUserRunnable(UsersJpaDao userDao, Users u) {
 		this.userDao = userDao;
 		this.u = u;
 	}

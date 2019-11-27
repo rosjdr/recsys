@@ -3,6 +3,8 @@ package br.edu.ufsj.rodrigocarvalho.recsys.loader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +18,8 @@ import org.json.simple.parser.ParseException;
 
 import br.edu.ufsj.rodrigocarvalho.recsys.dao.SaveUserFriendsRunnable;
 import br.edu.ufsj.rodrigocarvalho.recsys.dao.SaveUserRunnable;
-import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersDao;
+import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersJdbcDao;
+import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersJpaDao;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
 public class UsersLoader {
@@ -80,7 +83,7 @@ public class UsersLoader {
 		
 	}
 
-	private int importusers(List<Users> users, UsersDao userDao) {
+	private int importUsers(List<Users> users, UsersJpaDao userDao) {
 		int contImportedUsers = 0;
 		int i = 0;
 		userDao.startTransaction();
@@ -106,10 +109,45 @@ public class UsersLoader {
 
 		List<Users> users = load();
 
-		try (UsersDao userDao = new UsersDao()) {
-			contImportedUsers = importusers(users, userDao);
+		try (UsersJpaDao userDao = new UsersJpaDao()) {
+			contImportedUsers = importUsers(users, userDao);
 		}
 
+		return contImportedUsers;
+	}
+
+	public int importDataBatch(int batchSize) throws Exception {
+		int contImportedUsers = 0;
+		List<Users> users = load();
+
+		try (UsersJdbcDao userDao = new UsersJdbcDao()) {
+			contImportedUsers = importUsersBatch(users, userDao, batchSize);
+		}
+
+		return contImportedUsers;
+	}
+
+	private int importUsersBatch(List<Users> users, UsersJdbcDao userDao, int batchSize) throws SQLException {
+		int contImportedUsers = 0;
+		int[] importeds;
+		
+		List<Users> batchToImport = new ArrayList<Users>();
+		
+		for (Users u : users) {
+			batchToImport.add(u);
+			if (batchToImport.size() == batchSize) {
+				importeds = userDao.executeBatch(batchToImport);
+				batchToImport.clear();
+			}
+			contImportedUsers++;				
+		}
+		
+		if (batchToImport.size() > 0) {
+			importeds = userDao.executeBatch(batchToImport);
+		}
+		
+		userDao.insertUserFriendsBatch(users);
+		
 		return contImportedUsers;
 	}	
 
