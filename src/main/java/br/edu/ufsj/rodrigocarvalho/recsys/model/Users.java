@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -26,9 +28,9 @@ public class Users {
 	private String friendsStr;
 	
 	@JoinTable(name = "friends", schema = "recsys", joinColumns = {
-			@JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "friendId", referencedColumnName = "userId", nullable = false) })
-	@ManyToMany	
+			@JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false, foreignKey = @javax.persistence.ForeignKey(foreignKeyDefinition = "none", value = ConstraintMode.NO_CONSTRAINT)), }, 
+			inverseJoinColumns = {@JoinColumn(name = "friendId", referencedColumnName = "userId", nullable = false, foreignKey = @javax.persistence.ForeignKey(foreignKeyDefinition = "none", value = ConstraintMode.NO_CONSTRAINT)) })
+	@ManyToMany
 	private Collection<Users> friends;
 
 	public Users() {
@@ -39,15 +41,6 @@ public class Users {
 		this.name = name;
 		this.fans = fans;
 		this.averageStars = averageStars;
-
-		this.friends = new ArrayList<Users>();
-	}
-
-	public Users(String userId) {
-		this.userId = userId;
-		this.name = null;
-		this.fans = 0L;
-		this.averageStars = 0.0;
 
 		this.friends = new ArrayList<Users>();
 	}
