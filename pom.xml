@@ -55,13 +55,14 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>5.4.7.Final</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>9.3-1104-jdbc41</version>
-		</dependency>	
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.3-1104-jdbc41</version>
+		</dependency>
+
 
 	</dependencies>
 </project>

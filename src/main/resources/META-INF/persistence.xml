@@ -4,10 +4,8 @@
 		http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
 
-	<!-- unidade de persistencia com o nome financas -->
 	<persistence-unit name="recsys_yelp">
 
-		<!-- Implementação do JPA, no nosso caso Hibernate -->
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
 		<!-- Aqui são listadas todas as entidades -->
@@ -15,10 +13,7 @@
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" /> <!-- DB Driver -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/recsys_yelp" /> <!-- BD Mane -->
-			<property name="javax.persistence.jdbc.user" value="postgres" /> <!-- DB User -->
-			<property name="javax.persistence.jdbc.password" value="postgres" /> <!-- DB Password -->
-
+			
 			<property name="hibernate.jdbc.batch_size" value="5" /> <!-- Cache size to batch processing -->
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect" /> <!-- DB Dialect -->
 			<property name="hibernate.hbm2ddl.auto" value="update" /> <!-- create / create-drop / update -->

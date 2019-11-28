@@ -3,23 +3,16 @@ package br.edu.ufsj.rodrigocarvalho.recsys.loader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
-import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import br.edu.ufsj.rodrigocarvalho.recsys.dao.SaveUserFriendsRunnable;
-import br.edu.ufsj.rodrigocarvalho.recsys.dao.SaveUserRunnable;
 import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersJdbcDao;
-import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersJpaDao;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
 public class UsersLoader {
@@ -69,51 +62,6 @@ public class UsersLoader {
 		user.setFriendsStr((String) jsonObject.get("friends"));
 
 		return user;
-	}
-
-	private void setFriendsByString(Users user, List<Users> users) {
-		String friendsStr = user.getFriendsStr();
-		List<String> friendsIds = new ArrayList<String>(Arrays.asList(friendsStr.split(",", 0)));
-		
-		for (String userId : friendsIds) {
-			Users userToFind = new Users(userId.trim());
-			Users userToAdd = users.get(users.indexOf(userToFind));
-			user.addFriend(userToAdd);
-		}
-		
-	}
-
-	private int importUsers(List<Users> users, UsersJpaDao userDao) {
-		int contImportedUsers = 0;
-		int i = 0;
-		userDao.startTransaction();
-
-		for (Users u : users) {
-			try {
-				setFriendsByString(u,users);
-				userDao.save(u);
-				contImportedUsers++;				
-			} catch (Exception e) {
-				userDao.rollback();
-				Logger log = Logger.getLogger(this.getClass());
-				log.error("Fail to import user: " + u.getUserId() + ": " + e.getMessage());
-			}
-		}
-		
-		userDao.commit();
-		return contImportedUsers;
-	}
-	
-	public int importData() throws FileNotFoundException, IOException, ParseException {
-		int contImportedUsers = 0;
-
-		List<Users> users = load();
-
-		try (UsersJpaDao userDao = new UsersJpaDao()) {
-			contImportedUsers = importUsers(users, userDao);
-		}
-
-		return contImportedUsers;
 	}
 
 	public int importDataBatch(int batchSize) throws Exception {

@@ -1,5 +1,6 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.dao;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ public class UsersJdbcDao implements AutoCloseable {
 	private Connection connection;
 	private PreparedStatement preparedStatement;
 	
-	public UsersJdbcDao() {
+	public UsersJdbcDao() throws IOException {
 		try {
 			connection = new JdbcHelper().getConnection();
 		} catch (SQLException e) {
@@ -44,9 +45,7 @@ public class UsersJdbcDao implements AutoCloseable {
 			preparedStatement.addBatch();
 		}				
 		int[] inserted = preparedStatement.executeBatch();
-		
-//		insertUserFriendsBatch(batchToImport);
-		
+				
 		preparedStatement.close();
 		return inserted;
 	}

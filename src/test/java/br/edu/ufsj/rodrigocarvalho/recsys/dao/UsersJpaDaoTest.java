@@ -1,23 +1,24 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
 
-import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import br.edu.ufsj.rodrigocarvalho.recsys.loader.UsersLoader;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UsersJpaDaoTest {
 	
 	private static final double JOAO_FRANCISCO_STARS = 4.5;
@@ -27,7 +28,7 @@ public class UsersJpaDaoTest {
 	private UsersJpaDao userDao;
 
 	@Before
-	public void preparaDaoParaTestes() {
+	public void preparaDaoParaTestes() throws IOException {
 		userDao = new UsersJpaDao();
 		userDao.startTransaction();
 			
@@ -45,7 +46,7 @@ public class UsersJpaDaoTest {
 	}
 	
 	@Test
-	public void testUsersInsertIntegrationWithPostgres() {						
+	public void test01UsersInsertIntegrationWithPostgres() {						
 		Users user = getRosanyUser();		
 		userDao.save(user);
 
@@ -54,13 +55,13 @@ public class UsersJpaDaoTest {
 	}
 	
 	@Test(expected = EntityExistsException.class)	
-	public void testTwoEqualUsersFailIntegrationWithPostgres() {						
+	public void test02TwoEqualUsersFailIntegrationWithPostgres() {						
 		Users user1 = new Users(JOAO_FRANCISCO_ID, JOÃO_FRANCISCO_NAME, JOAO_FRANCISCO_FANS, JOAO_FRANCISCO_STARS);		
 		userDao.save(user1);
 	}	
 	
 	@Test
-	public void testFindUserIntegrationWithPostgres() {
+	public void test03FindUserIntegrationWithPostgres() {
 		Users userFind = userDao.find(JOAO_FRANCISCO_ID);
 		assertEquals(JOÃO_FRANCISCO_NAME, userFind.getName());
 		assertEquals(Long.valueOf(JOAO_FRANCISCO_FANS), userFind.getFans());
@@ -68,7 +69,7 @@ public class UsersJpaDaoTest {
 	}
 		
 	@Test
-	public void testUsersAndFriendsIntegrationWithPostgres() {
+	public void test04UsersAndFriendsIntegrationWithPostgres() {
 		Users userFind = userDao.find(JOAO_FRANCISCO_ID);
 		
 		Users friend1 = getGuiguiUser();		
@@ -89,26 +90,33 @@ public class UsersJpaDaoTest {
 		assertTrue(friendsSaved.contains(friend2));
 	}
 	
-	
 	@Test
-	public void testImportUsersFromJsonToDataBase() throws FileNotFoundException, IOException, ParseException {
-		UsersLoader usersLoader = new UsersLoader(
-				"test_datasets/user.json");
-
-		List<Users> users;
-		users = usersLoader.load();
+	public void test05RemoveUser() {
+		Users user = getRodrigoUser();		
+		userDao.save(user);
 		
-		users.forEach(u -> userDao.save(u));
-		users.forEach(u -> userDao.setFriendsByString(u));
-		users.forEach(u -> userDao.save(u));
+		userDao.remove(user);
 		
-		assertTrue(users.size() > 0);		
+		Users userFind = userDao.find("000");
+		assertNull(userFind);
 	}
 	
-	
+	@Test
+	public void test06FindAllUsers() {
+		List<Users> users = userDao.findAll();
+		
+		assertEquals(1, users.size());
+		
+		Users user = users.get(0);
+		assertEquals("123", user.getUserId());
+	}
 
 	private Users getAryaUser() {
 		return new Users("789", "Arya", 10L, 3.5);
+	}
+	
+	private Users getRodrigoUser() {
+		return new Users("000", "Rodrigo", 10L, 3.5);
 	}
 
 	private Users getGuiguiUser() {

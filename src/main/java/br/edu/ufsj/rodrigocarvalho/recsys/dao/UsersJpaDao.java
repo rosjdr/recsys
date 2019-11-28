@@ -1,5 +1,6 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.dao;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ public class UsersJpaDao implements AutoCloseable{
 
 	private EntityManager entityManager;
 
-	public UsersJpaDao() {
+	public UsersJpaDao() throws IOException {
 		JpaHelper jpaHelper = new JpaHelper();
 		this.entityManager = jpaHelper.getEntityManager();		
 	}
@@ -43,10 +44,6 @@ public class UsersJpaDao implements AutoCloseable{
 		entityManager.close();
 		
 	}
-
-	public List<Users> getFriendsByUser(Users userFind) {		
-		return null;
-	}
 	
 	public void remove(Users user) {
 		entityManager.remove(user);
@@ -55,21 +52,6 @@ public class UsersJpaDao implements AutoCloseable{
 	public List<Users> findAll(){
 		TypedQuery<Users> query = entityManager.createQuery("from Users", Users.class);
 		return query.getResultList();
-	}
-
-	public void setFriendsByString(Users user) {
-		String friendsStr = user.getFriendsStr();
-		List<String> friendsIds = new ArrayList<String>(Arrays.asList(friendsStr.split(",", 0)));
-		
-		friendsIds.forEach(uId -> user.addFriend(this.find(uId.trim())));
-	}
-
-	public void flush() {
-		entityManager.flush();
-	}
-
-	public void clear() {
-		entityManager.clear();
 	}
 
 }
