@@ -15,20 +15,18 @@ import org.json.simple.parser.ParseException;
 
 import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersJdbcDao;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
-import br.edu.ufsj.rodrigocarvalho.system.ImportUsers;
+import br.edu.ufsj.rodrigocarvalho.system.ImportData;
 import br.edu.ufsj.rodrigocarvalho.system.ProgressBar;
 
 public class UsersLoader {
 
 	private String fileName;
-	private ProgressBar progressBar;
 
 	public UsersLoader(String fileName) {
 		this.fileName = fileName;
 	}
 	
-	public void setProgressBar(ProgressBar progressBar) {
-		this.progressBar = progressBar;
+	public void setProgressBar() {
 	}
 
 	public List<Users> load() throws FileNotFoundException, IOException, ParseException {
@@ -80,32 +78,26 @@ public class UsersLoader {
 	private int importUsersBatch(List<Users> users, UsersJdbcDao userDao, int batchSize) throws SQLException {
 		int contImportedUsers = 0;
 		int[] importeds;
-		Logger logger = Logger.getLogger(this.getClass());
 		
 		List<Users> batchToImport = new ArrayList<Users>();
 		
 		userDao.setAutoCommit(false);
-//		logger.info("Users import starting...");
 		for (Users u : users) {
 			batchToImport.add(u);
 			if (batchToImport.size() == batchSize) {
 				importeds = userDao.executeBatch(batchToImport);
 				batchToImport.clear();				
 				userDao.commit();
-				if (this.progressBar != null) {
-					this.progressBar.add("user", String.valueOf(contImportedUsers+1));
-				}
-//				logger.info((contImportedUsers+1) + "/" + users.size() + " users has been imported...");
 				
 			}
 			contImportedUsers++;				
+			ProgressBar.getInstance().add("user", String.valueOf(contImportedUsers+1)+"/"+users.size());
+			
 		}
 		
 		if (batchToImport.size() > 0) {
 			importeds = userDao.executeBatch(batchToImport);
 		}
-		
-//		logger.info("Users import done!");
 		
 		return contImportedUsers;
 	}

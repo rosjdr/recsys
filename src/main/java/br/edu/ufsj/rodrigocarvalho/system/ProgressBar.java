@@ -6,9 +6,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProgressBar {
 
 	private Map<String, String> map;
+	private static ProgressBar instance;
+	private boolean running;
 	
-	public ProgressBar() {
-		this.map = new ConcurrentHashMap<String, String>();
+	public boolean isRunning() {
+		return running;
+	}
+	
+	private ProgressBar() {
+		
+	}
+	
+	public static ProgressBar getInstance() {
+		if (instance == null) {
+			instance = new ProgressBar();
+			instance.map = new ConcurrentHashMap<String, String>();
+			instance.running = false;
+		}
+		return instance;
 	}
 	
 	public void add(String key, String value) {
@@ -18,5 +33,11 @@ public class ProgressBar {
 	public String get(String key) {
 		return map.get(key);
 	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
+		
+	}
 	
 }
+

@@ -8,33 +8,22 @@ public class ImportUsersRunnable implements Runnable {
 
 	private String fileName;
 	private int batchSize;
-	private ProgressBar progressBar;
-	private boolean running;
 
-	public ImportUsersRunnable(String fileName, int batchSize, ProgressBar progressBar) {
+	public ImportUsersRunnable(String fileName, int batchSize) {
 		super();
 		this.fileName = fileName;
 		this.batchSize = batchSize;
-		this.progressBar = progressBar;
-		this.running = false;
-	}
-
-	public boolean isRunning() {
-		return running;
 	}
 	
 	@Override
 	public void run() {
-		Logger logger = Logger.getLogger(ImportUsers.class);
-
+		Logger logger = Logger.getLogger(ImportData.class);
 		UsersLoader usersLoader = new UsersLoader(fileName);
-		usersLoader.setProgressBar(progressBar);
-		
-		this.running = true;
+		ProgressBar.getInstance().setRunning(true);
 		
 		try {			
 			usersLoader.importDataBatch(batchSize);
-			this.running = false;
+			ProgressBar.getInstance().setRunning(false);
 		} catch (Exception e) {
 			logger.error("Fail to import users from json to data base: ", e);
 			e.printStackTrace();
