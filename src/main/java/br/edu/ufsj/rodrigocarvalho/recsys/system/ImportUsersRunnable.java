@@ -1,4 +1,4 @@
-package br.edu.ufsj.rodrigocarvalho.system;
+package br.edu.ufsj.rodrigocarvalho.recsys.system;
 
 import org.apache.log4j.Logger;
 

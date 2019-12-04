@@ -32,11 +32,8 @@ public class UsersJpaDaoTest {
 		userDao = new UsersJpaDao();
 		userDao.startTransaction();
 			
-		Users user = userDao.find(JOAO_FRANCISCO_ID);
-		if (user == null) {
-			user = new Users(JOAO_FRANCISCO_ID, JOÃO_FRANCISCO_NAME, JOAO_FRANCISCO_FANS, JOAO_FRANCISCO_STARS);		
-			userDao.save(user);			
-		}
+		Users user = new Users(JOAO_FRANCISCO_ID, JOÃO_FRANCISCO_NAME, JOAO_FRANCISCO_FANS, JOAO_FRANCISCO_STARS);		
+		userDao.save(user);			
 	}
 
 	@After

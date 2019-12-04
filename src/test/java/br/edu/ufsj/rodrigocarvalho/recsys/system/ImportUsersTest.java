@@ -1,41 +1,48 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.system;
 
-import org.apache.log4j.Logger;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import br.edu.ufsj.rodrigocarvalho.system.ImportData;
-import br.edu.ufsj.rodrigocarvalho.system.ImportUsersRunnable;
-import br.edu.ufsj.rodrigocarvalho.system.ProgressBar;
+import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersJpaDao;
+import br.edu.ufsj.rodrigocarvalho.recsys.loader.UsersLoader;
+import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ImportUsersTest {
 
+	@Before
+	public void test01UsersCleanTable() throws Exception {
+		UsersJpaDao userDao = new UsersJpaDao();
+		userDao.startTransaction();		
+		userDao.removeAll();		
+		userDao.commit();
+	}	
+	
 	@Test
-	public void testProgressBarImportBatch() {
-		Logger logger = Logger.getLogger(ImportData.class);
-		logger.info("Import program has started!");
+	public void test01UsersImportBatchToBD() throws Exception {
+		UsersLoader usersLoader = new UsersLoader("test_datasets/user.json");
+		int countUsersImported = usersLoader.importDataBatch(5);		
+		assertEquals(10, countUsersImported);
+	}
+	
+	@Test
+	public void test02UsersCleanTable() throws Exception {
+		UsersJpaDao userDao = new UsersJpaDao();
+		userDao.startTransaction();		
+		userDao.removeAll();		
+		userDao.commit();
 		
-		ImportUsersRunnable importUsers = new ImportUsersRunnable("test_datasets/user.json", 2);
-
+		List<Users> users = userDao.findAll(); 
 		
-		logger.info("Users import progress: " + ProgressBar.getInstance().get("user"));
+		assertEquals(0, users.size());
 		
-		Thread threadUsuarios = new Thread(importUsers);
-		threadUsuarios.start();
-				
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		while (ProgressBar.getInstance().isRunning()) {
-			logger.info("Users import progress: " + ProgressBar.getInstance().get("user"));	
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		logger.info("Import program has finished!");
 	}
 }

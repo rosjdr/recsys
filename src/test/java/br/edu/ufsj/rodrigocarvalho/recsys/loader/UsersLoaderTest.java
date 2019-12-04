@@ -1,7 +1,6 @@
 package br.edu.ufsj.rodrigocarvalho.recsys.loader;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,7 +21,7 @@ public class UsersLoaderTest {
 
 		List<Users> users;
 		users = usersLoader.load();
-		assertNotEquals(0, users.size());
+		assertEquals(10, users.size());
 	}
 
 	@Test(expected = FileNotFoundException.class)
@@ -39,10 +38,4 @@ public class UsersLoaderTest {
 		usersLoader.load();
 	}
 	
-	@Test
-	public void testUsersImportBatchToBD() throws Exception {
-		UsersLoader usersLoader = new UsersLoader("test_datasets/user.json");
-		int countUsersImported = usersLoader.importDataBatch(5);		
-		assertEquals(10, countUsersImported);
-	}
 }
