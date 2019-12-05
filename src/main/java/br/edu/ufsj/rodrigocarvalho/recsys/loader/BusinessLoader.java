@@ -61,7 +61,7 @@ public class BusinessLoader extends JsonLoader<Business> {
 				
 			}
 			contImported++;				
-			ProgressBar.getInstance().add("business", String.valueOf(contImported+1)+"/"+business.size());
+			ProgressBar.getInstance().add("business", String.valueOf(contImported)+"/"+business.size());
 			
 		}
 		

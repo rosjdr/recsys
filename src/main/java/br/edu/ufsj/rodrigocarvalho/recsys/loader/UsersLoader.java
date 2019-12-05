@@ -56,7 +56,7 @@ public class UsersLoader extends JsonLoader<Users> {
 				
 			}
 			contImportedUsers++;				
-			ProgressBar.getInstance().add("user", String.valueOf(contImportedUsers+1)+"/"+users.size());
+			ProgressBar.getInstance().add("user", String.valueOf(contImportedUsers)+"/"+users.size());
 			
 		}
 		

@@ -17,7 +17,7 @@ public class ImportUsersRunnable implements Runnable {
 	
 	@Override
 	public void run() {
-		Logger logger = Logger.getLogger(ImportData.class);
+		Logger logger = Logger.getLogger(ImportUsersRunnable.class);
 		UsersLoader usersLoader = new UsersLoader(fileName);
 		ProgressBar.getInstance().setRunning(true);
 		
