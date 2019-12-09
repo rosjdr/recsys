@@ -8,22 +8,22 @@ public class ImportBusinessRunnable implements Runnable {
 
 	private String fileName;
 	private int batchSize;
+	private ProgressBar progressBar;
 
-	public ImportBusinessRunnable(String fileName, int batchSize) {
+	public ImportBusinessRunnable(String fileName, int batchSize, ProgressBar progressBar) {
 		super();
 		this.fileName = fileName;
 		this.batchSize = batchSize;
+		this.progressBar = progressBar;
 	}
 	
 	@Override
 	public void run() {
 		Logger logger = Logger.getLogger(ImportBusinessRunnable.class);
 		BusinessLoader loader = new BusinessLoader(fileName);
-		ProgressBar.getInstance().setRunning(true);
 		
 		try {			
-			loader.importDataBatch(batchSize);
-			ProgressBar.getInstance().setRunning(false);
+			loader.importDataBatch(batchSize, progressBar);
 		} catch (Exception e) {
 			logger.error("Fail to import business from json to data base: ", e);
 			e.printStackTrace();

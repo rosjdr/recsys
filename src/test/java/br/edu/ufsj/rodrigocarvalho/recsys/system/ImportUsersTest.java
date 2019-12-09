@@ -28,8 +28,9 @@ public class ImportUsersTest {
 	
 	@Test
 	public void test01UsersImportBatchToBD() throws Exception {
-		UsersLoader usersLoader = new UsersLoader("test_datasets/user.json");
-		int countUsersImported = usersLoader.importDataBatch(5);		
+		UsersLoader usersLoader = new UsersLoader("test_datasets/yelp_dataset/user.json");
+		ProgressBar progressBar = new ProgressBar();
+		int countUsersImported = usersLoader.importDataBatch(5,progressBar);		
 		assertEquals(10, countUsersImported);
 	}
 	

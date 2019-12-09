@@ -28,8 +28,9 @@ public class ImportBusinessTest {
 	
 	@Test
 	public void test01BusinessImportBatchToBD() throws Exception {
-		BusinessLoader BusinessLoader = new BusinessLoader("test_datasets/business.json");
-		int countBusinessImported = BusinessLoader.importDataBatch(5);		
+		BusinessLoader BusinessLoader = new BusinessLoader("test_datasets/yelp_dataset/business.json");
+		ProgressBar progressBar = new ProgressBar();
+		int countBusinessImported = BusinessLoader.importDataBatch(5,progressBar);		
 		assertEquals(10, countBusinessImported);
 	}
 	

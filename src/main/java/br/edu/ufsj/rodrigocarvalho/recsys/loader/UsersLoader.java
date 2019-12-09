@@ -4,10 +4,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import br.edu.ufsj.rodrigocarvalho.recsys.dao.UsersJdbcDao;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
+import br.edu.ufsj.rodrigocarvalho.recsys.system.ImportData;
 import br.edu.ufsj.rodrigocarvalho.recsys.system.ProgressBar;
 
 public class UsersLoader extends JsonLoader<Users> {
@@ -29,18 +31,21 @@ public class UsersLoader extends JsonLoader<Users> {
 		return user;
 	}
 
-	public int importDataBatch(int batchSize) throws Exception {
+	public int importDataBatch(int batchSize, ProgressBar progressBar) throws Exception {
+		Logger logger = Logger.getLogger(ImportData.class);
 		int contImportedUsers = 0;
-		List<Users> users = load();
 		
+		logger.info("Lendo arquivo: " + getFileName());
+		List<Users> users = load();	
+		logger.info("Fim da leitura do arquivo: " + getFileName() + ". Iniciando importação...");
 		try (UsersJdbcDao userDao = new UsersJdbcDao()) {
-			contImportedUsers = importUsersBatch(users, userDao, batchSize);	
+			contImportedUsers = importUsersBatch(users, userDao, batchSize, progressBar);	
 		}
 
 		return contImportedUsers;
 	}
 
-	private int importUsersBatch(List<Users> users, UsersJdbcDao userDao, int batchSize) throws SQLException {
+	private int importUsersBatch(List<Users> users, UsersJdbcDao userDao, int batchSize, ProgressBar progressBar) throws SQLException {
 		int contImportedUsers = 0;
 		int[] importeds;
 		
@@ -53,11 +58,9 @@ public class UsersLoader extends JsonLoader<Users> {
 				importeds = userDao.executeBatch(batchToImport);
 				batchToImport.clear();				
 				userDao.commit();
-				
 			}
-			contImportedUsers++;				
-			ProgressBar.getInstance().add("user", String.valueOf(contImportedUsers)+"/"+users.size());
-			
+			contImportedUsers++;
+			progressBar.add("user", String.valueOf(contImportedUsers*100/users.size())+"%");
 		}
 		
 		if (batchToImport.size() > 0) {

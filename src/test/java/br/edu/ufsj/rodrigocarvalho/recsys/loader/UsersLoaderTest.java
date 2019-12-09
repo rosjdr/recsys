@@ -17,7 +17,7 @@ public class UsersLoaderTest {
 	public void verifyUsersImportFromFile() throws FileNotFoundException, IOException, ParseException {
 
 		UsersLoader usersLoader = new UsersLoader(
-				"test_datasets/user.json");
+				"test_datasets/yelp_dataset/user.json");
 
 		List<Users> users;
 		users = usersLoader.load();
@@ -33,7 +33,7 @@ public class UsersLoaderTest {
 	@Test(expected = ParseException.class)
 	public void testaConteudoDeArquivoInvalidoParaImportarJson() throws FileNotFoundException, IOException, ParseException {
 		UsersLoader usersLoader = new UsersLoader(
-				"test_datasets/user.jsonInvalido.test");
+				"test_datasets/yelp_dataset/user.jsonInvalido.test");
 
 		usersLoader.load();
 	}

@@ -16,7 +16,7 @@ public class BusinessLoaderTest {
 	@Test
 	public void testBusinessImportFromFile() throws FileNotFoundException, IOException, ParseException {
 
-		BusinessLoader loader = new BusinessLoader("test_datasets/business.json");
+		BusinessLoader loader = new BusinessLoader("test_datasets/yelp_dataset/business.json");
 
 		List<Business> business;
 		business = loader.load();

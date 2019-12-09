@@ -5,11 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import br.edu.ufsj.rodrigocarvalho.recsys.dao.BusinessJdbcDao;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Business;
 import br.edu.ufsj.rodrigocarvalho.recsys.model.Users;
+import br.edu.ufsj.rodrigocarvalho.recsys.system.ImportData;
 import br.edu.ufsj.rodrigocarvalho.recsys.system.ProgressBar;
 
 public class BusinessLoader extends JsonLoader<Business> {
@@ -34,18 +36,21 @@ public class BusinessLoader extends JsonLoader<Business> {
 		return b;
 	}
 	
-	public int importDataBatch(int batchSize) throws Exception {
+	public int importDataBatch(int batchSize, ProgressBar progressBar) throws Exception {
 		int contImportedUsers = 0;
+		Logger logger = Logger.getLogger(ImportData.class);
+		logger.info("Lendo arquivo: " + getFileName());
 		List<Business> business = load();
+		logger.info("Fim da leitura do arquivo: " + getFileName() + ". Iniciando importação...");
 		
 		try (BusinessJdbcDao businessDao = new BusinessJdbcDao()) {
-			contImportedUsers = importBusinessBatch(business, businessDao, batchSize);	
+			contImportedUsers = importBusinessBatch(business, businessDao, batchSize, progressBar);	
 		}
 
 		return contImportedUsers;
 	}
 
-	private int importBusinessBatch(List<Business> business, BusinessJdbcDao businessDao, int batchSize) throws SQLException {
+	private int importBusinessBatch(List<Business> business, BusinessJdbcDao businessDao, int batchSize, ProgressBar progressBar) throws SQLException {
 		int contImported = 0;
 		int[] importeds;
 		
@@ -60,9 +65,8 @@ public class BusinessLoader extends JsonLoader<Business> {
 				businessDao.commit();
 				
 			}
-			contImported++;				
-			ProgressBar.getInstance().add("business", String.valueOf(contImported)+"/"+business.size());
-			
+			contImported++;
+			progressBar.add("business", String.valueOf(contImported*100/business.size())+"%");
 		}
 		
 		if (batchToImport.size() > 0) {

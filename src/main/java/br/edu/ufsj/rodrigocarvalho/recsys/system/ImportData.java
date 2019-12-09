@@ -19,7 +19,8 @@ public class ImportData {
 		ProgressBar progressBar = new ProgressBar();
 		
 		Logger logger = Logger.getLogger(ImportData.class);					
-		createProgressBar(progressBar);
+		
+		logger.info("Import program has been starten!");
 		
 		try {
 			logger.info("Program is cleaning users table...");
@@ -39,13 +40,17 @@ public class ImportData {
 			logger.error("An unknown error has ocurred while cleaning business table...");
 		}
 		
-		importUsers();
-		importBusiness();
+		importUsers(progressBar);
+		importBusiness(progressBar);
+		createProgressBar(progressBar);
+		
+		logger.info("Import program has finished!");
+		
 	}
 
-	private static void importBusiness() {
-		ImportBusinessRunnable importBusiness = new ImportBusinessRunnable(BUSINESS_JSON_DATASET, BATCH_SIZE);
-		Thread threadBusiness = new Thread(importBusiness);
+	private static void importBusiness(ProgressBar progressBar) {
+		ImportBusinessRunnable importBusiness = new ImportBusinessRunnable(BUSINESS_JSON_DATASET, BATCH_SIZE, progressBar);
+		Thread threadBusiness = new Thread(importBusiness,"importBusiness");
 		threadBusiness.start();
 	}
 
@@ -57,17 +62,15 @@ public class ImportData {
 	}
 
 	private static void createProgressBar(ProgressBar progressBar) {
-		
-		
-		ProgressBar.getInstance().setRunning(true);	
-		ProgressBarRunnable progressBarRunnable = new ProgressBarRunnable();
-		Thread threadProgressBar = new Thread(progressBarRunnable);
+		ProgressBarRunnable progressBarRunnable = new ProgressBarRunnable(progressBar);
+		Thread threadProgressBar = new Thread(progressBarRunnable,"progressBar");
+		threadProgressBar.setDaemon(true);
 		threadProgressBar.start();
 	}
 
-	private static void importUsers() {
-		ImportUsersRunnable importUsers = new ImportUsersRunnable(USER_JSON_DATASET, BATCH_SIZE);
-		Thread threadUsuarios = new Thread(importUsers);
+	private static void importUsers(ProgressBar progressBar) {
+		ImportUsersRunnable importUsers = new ImportUsersRunnable(USER_JSON_DATASET, BATCH_SIZE, progressBar);
+		Thread threadUsuarios = new Thread(importUsers, "importUsers");
 		threadUsuarios.start();
 	}
 
